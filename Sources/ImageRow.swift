@@ -69,7 +69,7 @@ protocol ImageRowProtocol {
 
 //MARK: Row
 
-open class _ImageRow<VCType: TypedRowControllerType, Cell: CellType>: SelectorRow<Cell, VCType>, ImageRowProtocol where VCType: UIImagePickerController, VCType.RowValue == UIImage, Cell: BaseCell, Cell: TypedCellType, Cell.Value == UIImage {
+open class _ImageRow<Cell: CellType>: SelectorRow<Cell>, ImageRowProtocol where Cell: BaseCell, Cell.Value == UIImage {
     
 
     open var sourceTypes: ImageRowSourceTypes
@@ -82,10 +82,10 @@ open class _ImageRow<VCType: TypedRowControllerType, Cell: CellType>: SelectorRo
     public required init(tag: String?) {
         sourceTypes = .All
         super.init(tag: tag)
-        presentationMode = .presentModally(controllerProvider: ControllerProvider.callback { return VCType() }, onDismiss: { [weak self] vc in
-            self?.select()
-            vc.dismiss(animated: true)
-            })
+//        presentationMode = .presentModally(controllerProvider: ControllerProvider.callback { return UIImagePickerController() }, onDismiss: { [weak self] vc in
+//            self?.select()
+//            vc.dismiss(animated: true)
+//            })
         self.displayValueFor = nil
         
     }
@@ -95,7 +95,7 @@ open class _ImageRow<VCType: TypedRowControllerType, Cell: CellType>: SelectorRo
         if let presentationMode = presentationMode, !isDisabled {
             if let controller = presentationMode.makeController(){
                 controller.row = self
-                controller.sourceType = sourceType
+                //controller.sourceType = sourceType
                 onPresentCallback?(cell.formViewController()!, controller)
                 presentationMode.present(controller, row: self, presentingController: cell.formViewController()!)
             }
@@ -193,7 +193,7 @@ extension _ImageRow {
 }
 
 /// A selector row where the user can pick an image
-public final class ImageRow : _ImageRow<ImagePickerController, ImageCell>, RowType {
+public final class ImageRow : _ImageRow<ImageCell>, RowType {
     
     public required init(tag: String?) {
         super.init(tag: tag)
